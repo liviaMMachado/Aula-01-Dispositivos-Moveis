@@ -1,6 +1,8 @@
 package com.ifsc.app;
 
 import android.os.Bundle;
+import android.util.Log;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -20,5 +22,37 @@ public class MainActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+        Toast.makeText(this, "OnCreate", Toast.LENGTH_LONG).show();
+        Log.d("ciclodavida", "onCreate");
+    }
+    @Override
+        protected void onStart () {
+            super.onStart();
+            Toast.makeText(this, "onStart", Toast.LENGTH_LONG).show();
+        Log.d("ciclodavida", "onStart");
+    }
+    @Override
+    protected void onResume () {
+        super.onResume();
+        Toast.makeText(this, "onResume", Toast.LENGTH_LONG).show();
+        Log.d("ciclodavida", "onResume");
+    }
+    @Override
+    protected void onPause () {
+        super.onPause();
+        Toast.makeText(this, "onPause", Toast.LENGTH_LONG).show();
+        Log.d("ciclodavida", "onPause");
+    }
+    @Override
+    protected void onStop () {
+        super.onStop();
+        Toast.makeText(this, "onStop", Toast.LENGTH_LONG).show();
+        Log.d("ciclodavida", "onStop");
+    }
+    @Override
+    protected void onDestroy () {
+        super.onDestroy();
+        Toast.makeText(this, "onDestroy", Toast.LENGTH_LONG).show();
+        Log.d("ciclodavida", "onDestroy");
     }
 }
