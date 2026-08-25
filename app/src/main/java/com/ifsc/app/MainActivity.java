@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -30,6 +31,15 @@ public class MainActivity extends AppCompatActivity {
         Button b = findViewById(R.id.button);
         b.setOnClickListener(v -> {
             Intent i = new Intent(this, ActivityB.class);
+            startActivity(i);
+        });
+        Button b2 = findViewById(R.id.button2);
+        b2.setOnClickListener(v -> {
+            EditText editText=findViewById(R.id.edText);
+            String s = editText.getText().toString();
+
+            Intent i = new Intent(this. MainActivity2.class);
+            i.putExtra("msn", s);
             startActivity(i);
         });
     }
