@@ -38,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
             EditText editText=findViewById(R.id.edText);
             String s = editText.getText().toString();
 
-            Intent i = new Intent(this. MainActivity2.class);
+            Intent i = new Intent(this, MainActivity2.class);
             i.putExtra("msn", s);
             startActivity(i);
         });
