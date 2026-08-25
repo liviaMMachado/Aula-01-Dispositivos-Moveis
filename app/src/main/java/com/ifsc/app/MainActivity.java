@@ -1,7 +1,9 @@
 package com.ifsc.app;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -24,6 +26,12 @@ public class MainActivity extends AppCompatActivity {
         });
         Toast.makeText(this, "OnCreate", Toast.LENGTH_LONG).show();
         Log.d("ciclodavida", "onCreate");
+
+        Button b = findViewById(R.id.button);
+        b.setOnClickListener(v -> {
+            Intent i = new Intent(this, ActivityB.class);
+            startActivity(i);
+        });
     }
     @Override
         protected void onStart () {
