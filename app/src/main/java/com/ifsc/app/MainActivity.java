@@ -10,6 +10,7 @@ import android.os.Environment;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.ArrayAdapter;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -180,16 +181,26 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void showLayersDialog() {
-        String[] names = layerNames.toArray(new String[0]);
-        new AlertDialog.Builder(this)
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(
+                this, android.R.layout.simple_list_item_single_choice, new ArrayList<>(layerNames));
+        AlertDialog dialog = new AlertDialog.Builder(this)
                 .setTitle("Camadas")
-                .setSingleChoiceItems(names, activeLayer, (dialog, which) -> {
+                .setSingleChoiceItems(adapter, activeLayer, (listDialog, which) -> {
                     activeLayer = which;
                     canvasView.setActiveLayer(which);
-                    dialog.dismiss();
                 })
+                .setNegativeButton("Nova camada", null)
                 .setPositiveButton("Fechar", null)
-                .show();
+                .create();
+
+        dialog.setOnShowListener(ignored -> dialog.getButton(AlertDialog.BUTTON_NEGATIVE)
+                .setOnClickListener(view -> {
+                    addLayer();
+                    adapter.add(layerNames.get(activeLayer));
+                    dialog.getListView().setItemChecked(activeLayer, true);
+                    dialog.getListView().setSelection(activeLayer);
+                }));
+        dialog.show();
     }
 
     private void saveDrawing() {
