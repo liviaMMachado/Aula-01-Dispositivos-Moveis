@@ -188,19 +188,4 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/toolRow" />
 
-    <ImageButton
-        android:id="@+id/addLayerButton"
-        android:layout_width="42dp"
-        android:layout_height="44dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
-        android:background="@drawable/bg_add_layer"
-        android:contentDescription="Adicionar camada"
-        android:padding="0dp"
-        android:scaleType="center"
-        android:src="@drawable/ic_add"
-        android:tint="#666666"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
-
 </androidx.constraintlayout.widget.ConstraintLayout>

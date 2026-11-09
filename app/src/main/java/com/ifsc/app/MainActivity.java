@@ -83,7 +83,6 @@ public class MainActivity extends AppCompatActivity {
                 () -> canvasView.setStrokeWidth(strokeWidthSlider.getProgress() + 1f)));
         findViewById(R.id.saveButton).setOnClickListener(view -> saveDrawing());
         findViewById(R.id.layersButton).setOnClickListener(view -> showLayersDialog());
-        findViewById(R.id.addLayerButton).setOnClickListener(view -> addLayer());
     }
 
     private void updateColorPreview() {
