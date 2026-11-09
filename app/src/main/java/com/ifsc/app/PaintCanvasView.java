@@ -1,6 +1,7 @@
 package com.ifsc.app;
 
 import android.content.Context;
+import android.util.AttributeSet;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -8,21 +9,20 @@ import android.graphics.Path;
 import android.graphics.RectF;
 import android.view.MotionEvent;
 import android.view.View;
-import android.util.AttributeSet;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class PaintCanvasView extends View {
 
-    public enum Tool { FREEHAND, RECTANGLE, CIRCLE }
+    public enum Tool { FREEHAND, RECTANGLE, CIRCLE, LINE }
 
     private static final float STROKE_WIDTH = 8f;
 
     private final Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
     private final List<List<Stroke>> layers = new ArrayList<>();
     private int activeLayer;
-    private int strokeColor = Color.BLACK;
+    private int strokeColor = Color.RED;
     private Tool tool = Tool.FREEHAND;
     private Stroke inProgress;
 
@@ -111,6 +111,10 @@ public class PaintCanvasView extends View {
                 float radius = (float) Math.hypot(stroke.endX - stroke.startX,
                         stroke.endY - stroke.startY) / 2f;
                 canvas.drawCircle(centerX, centerY, radius, paint);
+                break;
+            case LINE:
+                canvas.drawLine(stroke.startX, stroke.startY,
+                        stroke.endX, stroke.endY, paint);
                 break;
         }
     }

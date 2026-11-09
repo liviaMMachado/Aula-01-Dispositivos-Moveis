@@ -5,132 +5,172 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F6F7FB"
-    android:padding="16dp"
+    android:background="@android:color/white"
+    android:clipToPadding="false"
     tools:context=".MainActivity">
 
-    <TextView
-        android:id="@+id/title"
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/toolbar"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:text="SimplePaint"
-        android:textColor="#202124"
-        android:textSize="24sp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toStartOf="@id/clearButton"
+        android:layout_height="56dp"
+        android:background="#6200EE"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:title="SimplePaint"
+        app:titleTextColor="@android:color/white" />
+
+    <View
+        android:id="@+id/statusBarBackground"
+        android:layout_width="0dp"
+        android:layout_height="24dp"
+        android:background="#6200EE"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/clearButton"
-        style="@style/Widget.Material3.Button.OutlinedButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:contentDescription="Limpar a camada atual"
-        android:minWidth="0dp"
-        android:text="Limpar"
-        app:layout_constraintBottom_toBottomOf="@id/title"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@id/title" />
 
     <com.google.android.material.button.MaterialButtonToggleGroup
         android:id="@+id/toolsGroup"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
+        android:layout_height="64dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="6dp"
+        android:layout_marginEnd="6dp"
         app:checkedButton="@id/toolFreehand"
         app:selectionRequired="true"
         app:singleSelection="true"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/currentColorButton"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/title">
+        app:layout_constraintTop_toBottomOf="@id/toolbar">
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/toolFreehand"
-            style="@style/Widget.Material3.Button.OutlinedButton"
+            style="@style/Widget.Material3.Button.TextButton"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="Livre" />
+            android:contentDescription="Desenho livre"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            android:minWidth="0dp"
+            app:icon="@drawable/ic_tool_freehand"
+            app:iconSize="40dp"
+            app:iconTint="#263238"
+            app:cornerRadius="0dp" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/toolRectangle"
-            style="@style/Widget.Material3.Button.OutlinedButton"
+            style="@style/Widget.Material3.Button.TextButton"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="Retângulo" />
+            android:contentDescription="Retângulo"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            android:minWidth="0dp"
+            app:icon="@drawable/ic_tool_rectangle"
+            app:iconSize="40dp"
+            app:iconTint="#263238"
+            app:cornerRadius="0dp" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/toolCircle"
-            style="@style/Widget.Material3.Button.OutlinedButton"
+            style="@style/Widget.Material3.Button.TextButton"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="Círculo" />
+            android:contentDescription="Círculo"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            android:minWidth="0dp"
+            app:icon="@drawable/ic_tool_circle"
+            app:iconSize="40dp"
+            app:iconTint="#263238"
+            app:cornerRadius="0dp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/toolLine"
+            style="@style/Widget.Material3.Button.TextButton"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:contentDescription="Linha reta"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            android:minWidth="0dp"
+            app:icon="@drawable/ic_tool_line"
+            app:iconSize="40dp"
+            app:iconTint="#263238"
+            app:cornerRadius="0dp" />
     </com.google.android.material.button.MaterialButtonToggleGroup>
 
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/currentColorButton"
+        style="@style/Widget.Material3.Button.OutlinedButton"
+        android:layout_width="58dp"
+        android:layout_height="58dp"
+        android:layout_marginEnd="10dp"
+        android:contentDescription="Escolher cor do traço"
+        android:insetTop="0dp"
+        android:insetBottom="0dp"
+        android:minWidth="0dp"
+        android:minHeight="0dp"
+        android:text=""
+        app:cornerRadius="0dp"
+        app:layout_constraintBottom_toBottomOf="@id/toolsGroup"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/toolsGroup"
+        app:strokeColor="#455A64"
+        app:strokeWidth="1dp" />
+
     <TextView
-        android:id="@+id/colorLabel"
+        android:id="@+id/layerLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="14dp"
-        android:text="Cor do traço"
-        android:textColor="#4C5058"
-        android:textStyle="bold"
+        android:layout_marginStart="16dp"
+        android:text="Camada"
+        android:textColor="#424242"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="@id/layerSpinner"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/toolsGroup" />
-
-    <HorizontalScrollView
-        android:id="@+id/colorScroll"
-        android:layout_width="0dp"
-        android:layout_height="48dp"
-        android:layout_marginTop="4dp"
-        android:fillViewport="false"
-        android:scrollbars="none"
-        app:layout_constraintEnd_toStartOf="@id/customColorButton"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/colorLabel">
-
-        <LinearLayout
-            android:id="@+id/colorPalette"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:gravity="center_vertical"
-            android:orientation="horizontal" />
-    </HorizontalScrollView>
-
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/customColorButton"
-        style="@style/Widget.Material3.Button.OutlinedButton"
-        android:layout_width="wrap_content"
-        android:layout_height="40dp"
-        android:layout_marginStart="6dp"
-        android:minWidth="0dp"
-        android:text="Personalizar"
-        android:textSize="12sp"
-        app:layout_constraintBottom_toBottomOf="@id/colorScroll"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@id/colorScroll" />
+        app:layout_constraintTop_toTopOf="@id/layerSpinner" />
 
     <Spinner
         android:id="@+id/layerSpinner"
         android:layout_width="0dp"
-        android:layout_height="48dp"
-        android:layout_marginTop="8dp"
+        android:layout_height="44dp"
+        android:layout_marginStart="6dp"
+        android:layout_marginTop="4dp"
         android:backgroundTint="#555B66"
         android:contentDescription="Selecionar camada de desenho"
         app:layout_constraintEnd_toStartOf="@id/addLayerButton"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/colorScroll" />
+        app:layout_constraintStart_toEndOf="@id/layerLabel"
+        app:layout_constraintTop_toBottomOf="@id/toolsGroup" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/addLayerButton"
-        style="@style/Widget.Material3.Button.TonalButton"
+        style="@style/Widget.Material3.Button.TextButton"
+        android:layout_width="48dp"
+        android:layout_height="44dp"
+        android:layout_marginEnd="4dp"
+        android:contentDescription="Adicionar camada"
+        android:minWidth="0dp"
+        android:text="+"
+        android:textSize="24sp"
+        app:layout_constraintBottom_toBottomOf="@id/layerSpinner"
+        app:layout_constraintEnd_toStartOf="@id/clearButton"
+        app:layout_constraintTop_toTopOf="@id/layerSpinner" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/clearButton"
+        style="@style/Widget.Material3.Button.TextButton"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:text="+ Camada"
+        android:layout_height="44dp"
+        android:layout_marginEnd="8dp"
+        android:contentDescription="Limpar camada atual"
+        android:minWidth="0dp"
+        android:text="Limpar"
+        android:textSize="12sp"
         app:layout_constraintBottom_toBottomOf="@id/layerSpinner"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@id/layerSpinner" />
@@ -139,12 +179,14 @@
         android:id="@+id/canvasCard"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="8dp"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginEnd="12dp"
+        android:layout_marginBottom="12dp"
         app:cardBackgroundColor="@android:color/white"
-        app:cardCornerRadius="12dp"
-        app:cardElevation="2dp"
-        app:strokeColor="#D8DCE5"
+        app:cardCornerRadius="2dp"
+        app:cardElevation="0dp"
+        app:strokeColor="#D7D7D7"
         app:strokeWidth="1dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
