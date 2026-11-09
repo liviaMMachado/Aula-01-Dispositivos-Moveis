@@ -3,7 +3,6 @@ package com.ifsc.app;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -26,15 +25,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
-
-    private static final int[] PRESET_COLORS = {
-            Color.BLACK, Color.RED, Color.BLUE, Color.GREEN,
-            Color.YELLOW, Color.MAGENTA, Color.CYAN, Color.DKGRAY
-    };
-    private static final String[] PRESET_NAMES = {
-            "Preto", "Vermelho", "Azul", "Verde",
-            "Amarelo", "Roxo", "Ciano", "Cinza escuro"
-    };
 
     private PaintCanvasView canvasView;
     private MaterialButtonToggleGroup toolsGroup;
@@ -98,9 +88,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private String colorName(int color) {
-        for (int i = 0; i < PRESET_COLORS.length; i++) {
-            if (PRESET_COLORS[i] == color) return PRESET_NAMES[i];
-        }
+        if (color == Color.BLACK) return "Preto";
+        if (color == Color.RED) return "Vermelho";
+        if (color == Color.BLUE) return "Azul";
+        if (color == Color.GREEN) return "Verde";
         return String.format("#%06X", color & 0xFFFFFF);
     }
 
@@ -110,81 +101,52 @@ public class MainActivity extends AppCompatActivity {
         int horizontalPadding = dp(20);
         content.setPadding(horizontalPadding, dp(8), horizontalPadding, 0);
 
-        TextView presetLabel = new TextView(this);
-        presetLabel.setText("Cores rápidas");
-        content.addView(presetLabel);
-
-        LinearLayout presets = new LinearLayout(this);
-        presets.setGravity(Gravity.CENTER_VERTICAL);
-        presets.setOrientation(LinearLayout.HORIZONTAL);
-        LinearLayout.LayoutParams presetParams = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT, dp(48));
-        presetParams.bottomMargin = dp(8);
-        content.addView(presets, presetParams);
-
         int current = canvasView.getStrokeColor();
-        SeekBar[] channels = new SeekBar[] {
-                createColorSlider(content, "Vermelho", Color.red(current)),
-                createColorSlider(content, "Verde", Color.green(current)),
-                createColorSlider(content, "Azul", Color.blue(current))
-        };
+        ColorWheelView colorWheel = new ColorWheelView(this);
+        colorWheel.setColor(current);
+        LinearLayout.LayoutParams wheelParams = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT, dp(240));
+        content.addView(colorWheel, wheelParams);
+
+        SeekBar opacity = createColorSlider(content, "Opacidade", Color.alpha(current), 255);
+        float[] initialHsv = new float[3];
+        Color.colorToHSV(current, initialHsv);
+        SeekBar brightness = createColorSlider(content, "Brilho", Math.round(initialHsv[2] * 100), 100);
 
         View preview = new View(this);
         LinearLayout.LayoutParams previewParams = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT, dp(40));
+                LinearLayout.LayoutParams.MATCH_PARENT, dp(32));
         previewParams.topMargin = dp(8);
         content.addView(preview, previewParams);
 
-        Runnable updatePreview = () -> preview.setBackgroundColor(Color.rgb(
-                channels[0].getProgress(), channels[1].getProgress(), channels[2].getProgress()));
-        for (SeekBar channel : channels) {
-            channel.setOnSeekBarChangeListener(colorChangeListener(updatePreview));
-        }
-        for (int i = 0; i < PRESET_COLORS.length; i++) {
-            final int color = PRESET_COLORS[i];
-            MaterialButton swatch = new MaterialButton(this);
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(dp(32), dp(32));
-            params.setMargins(dp(2), 0, dp(2), 0);
-            swatch.setLayoutParams(params);
-            swatch.setText("");
-            swatch.setContentDescription(PRESET_NAMES[i]);
-            swatch.setMinWidth(0);
-            swatch.setMinimumWidth(0);
-            swatch.setInsetTop(0);
-            swatch.setInsetBottom(0);
-            swatch.setCornerRadius(dp(16));
-            swatch.setBackgroundTintList(ColorStateList.valueOf(color));
-            swatch.setOnClickListener(view -> {
-                channels[0].setProgress(Color.red(color));
-                channels[1].setProgress(Color.green(color));
-                channels[2].setProgress(Color.blue(color));
-                updatePreview.run();
-            });
-            presets.addView(swatch);
-        }
+        Runnable updatePreview = () -> preview.setBackgroundColor(colorWheel.getColor());
+        colorWheel.setOnColorChangedListener(color -> updatePreview.run());
+        opacity.setOnSeekBarChangeListener(colorChangeListener(
+                () -> colorWheel.setOpacity(opacity.getProgress())));
+        brightness.setOnSeekBarChangeListener(colorChangeListener(
+                () -> colorWheel.setBrightness(brightness.getProgress() / 100f)));
         updatePreview.run();
 
         new AlertDialog.Builder(this)
-                .setTitle("Cor do traço")
+                .setTitle("ColorPicker Dialog")
                 .setView(content)
                 .setNegativeButton("Cancelar", null)
-                .setPositiveButton("Aplicar", (dialog, which) -> {
-                    canvasView.setStrokeColor(Color.rgb(
-                            channels[0].getProgress(), channels[1].getProgress(), channels[2].getProgress()));
+                .setPositiveButton("Selecionar", (dialog, which) -> {
+                    canvasView.setStrokeColor(colorWheel.getColor());
                     updateColorPreview();
                 })
                 .show();
     }
 
-    private SeekBar createColorSlider(LinearLayout parent, String label, int initialValue) {
+    private SeekBar createColorSlider(LinearLayout parent, String label, int initialValue, int maxValue) {
         TextView title = new TextView(this);
         title.setText(label);
         parent.addView(title);
         SeekBar slider = new SeekBar(this);
-        slider.setMax(255);
+        slider.setMax(maxValue);
         slider.setProgress(initialValue);
         parent.addView(slider, new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT, dp(36)));
+                LinearLayout.LayoutParams.MATCH_PARENT, dp(32)));
         return slider;
     }
 
