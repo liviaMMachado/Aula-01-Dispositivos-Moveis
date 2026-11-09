@@ -2,6 +2,7 @@ package com.ifsc.app;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -17,12 +18,11 @@ public class PaintCanvasView extends View {
 
     public enum Tool { FREEHAND, RECTANGLE, CIRCLE, LINE }
 
-    private static final float STROKE_WIDTH = 8f;
-
     private final Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
     private final List<List<Stroke>> layers = new ArrayList<>();
     private int activeLayer;
     private int strokeColor = Color.RED;
+    private float strokeWidth = 8f;
     private Tool tool = Tool.FREEHAND;
     private Stroke inProgress;
 
@@ -47,7 +47,6 @@ public class PaintCanvasView extends View {
         paint.setStyle(Paint.Style.STROKE);
         paint.setStrokeCap(Paint.Cap.ROUND);
         paint.setStrokeJoin(Paint.Join.ROUND);
-        paint.setStrokeWidth(STROKE_WIDTH);
     }
 
     public void setTool(Tool tool) {
@@ -60,6 +59,19 @@ public class PaintCanvasView extends View {
 
     public int getStrokeColor() {
         return strokeColor;
+    }
+
+    public void setStrokeWidth(float width) {
+        strokeWidth = Math.max(1f, Math.min(40f, width));
+    }
+
+    public Bitmap exportBitmap() {
+        if (getWidth() <= 0 || getHeight() <= 0) {
+            throw new IllegalStateException("A área de desenho ainda não está pronta");
+        }
+        Bitmap bitmap = Bitmap.createBitmap(getWidth(), getHeight(), Bitmap.Config.ARGB_8888);
+        drawContents(new Canvas(bitmap));
+        return bitmap;
     }
 
     public void addLayer() {
@@ -84,6 +96,10 @@ public class PaintCanvasView extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
+        drawContents(canvas);
+    }
+
+    private void drawContents(Canvas canvas) {
         canvas.drawColor(Color.WHITE);
         for (List<Stroke> layer : layers) {
             for (Stroke stroke : layer) drawStroke(canvas, stroke);
@@ -93,7 +109,7 @@ public class PaintCanvasView extends View {
 
     private void drawStroke(Canvas canvas, Stroke stroke) {
         paint.setColor(stroke.color);
-        paint.setStrokeWidth(STROKE_WIDTH);
+        paint.setStrokeWidth(stroke.strokeWidth);
         switch (stroke.tool) {
             case FREEHAND:
                 canvas.drawPath(stroke.path, paint);
@@ -125,7 +141,7 @@ public class PaintCanvasView extends View {
         float y = event.getY();
         switch (event.getActionMasked()) {
             case MotionEvent.ACTION_DOWN:
-                inProgress = new Stroke(tool, strokeColor, x, y);
+                inProgress = new Stroke(tool, strokeColor, strokeWidth, x, y);
                 if (tool == Tool.FREEHAND) inProgress.path.moveTo(x, y);
                 invalidate();
                 return true;
@@ -169,15 +185,17 @@ public class PaintCanvasView extends View {
     private static final class Stroke {
         final Tool tool;
         final int color;
+        final float strokeWidth;
         final float startX;
         final float startY;
         float endX;
         float endY;
         final Path path = new Path();
 
-        Stroke(Tool tool, int color, float x, float y) {
+        Stroke(Tool tool, int color, float strokeWidth, float x, float y) {
             this.tool = tool;
             this.color = color;
+            this.strokeWidth = strokeWidth;
             startX = x;
             startY = y;
             endX = x;

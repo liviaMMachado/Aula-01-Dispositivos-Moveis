@@ -1,16 +1,19 @@
 package com.ifsc.app;
 
 import android.content.res.ColorStateList;
+import android.content.ContentValues;
+import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
-import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
+import android.provider.MediaStore;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -21,6 +24,7 @@ import androidx.core.view.WindowInsetsCompat;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.button.MaterialButtonToggleGroup;
 
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,10 +33,8 @@ public class MainActivity extends AppCompatActivity {
     private PaintCanvasView canvasView;
     private MaterialButtonToggleGroup toolsGroup;
     private MaterialButton currentColorButton;
-    private Spinner layerSpinner;
     private final List<String> layerNames = new ArrayList<>();
-    private ArrayAdapter<String> layerAdapter;
-    private boolean updatingLayers;
+    private int activeLayer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,7 +76,12 @@ public class MainActivity extends AppCompatActivity {
         currentColorButton.setOnClickListener(view -> showColorPicker());
 
         setupLayers();
-        findViewById(R.id.clearButton).setOnClickListener(view -> canvasView.clearActiveLayer());
+        SeekBar strokeWidthSlider = findViewById(R.id.strokeWidthSlider);
+        canvasView.setStrokeWidth(strokeWidthSlider.getProgress() + 1f);
+        strokeWidthSlider.setOnSeekBarChangeListener(colorChangeListener(
+                () -> canvasView.setStrokeWidth(strokeWidthSlider.getProgress() + 1f)));
+        findViewById(R.id.saveButton).setOnClickListener(view -> saveDrawing());
+        findViewById(R.id.layersButton).setOnClickListener(view -> showLayersDialog());
         findViewById(R.id.addLayerButton).setOnClickListener(view -> addLayer());
     }
 
@@ -162,29 +169,54 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setupLayers() {
-        layerSpinner = findViewById(R.id.layerSpinner);
         layerNames.add("Camada 1");
-        layerAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, layerNames);
-        layerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        layerSpinner.setAdapter(layerAdapter);
-        layerSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if (!updatingLayers) canvasView.setActiveLayer(position);
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) { }
-        });
     }
 
     private void addLayer() {
         canvasView.addLayer();
         layerNames.add("Camada " + (layerNames.size() + 1));
-        layerAdapter.notifyDataSetChanged();
-        updatingLayers = true;
-        layerSpinner.setSelection(layerNames.size() - 1);
-        updatingLayers = false;
+        activeLayer = layerNames.size() - 1;
+        Toast.makeText(this, layerNames.get(activeLayer) + " adicionada", Toast.LENGTH_SHORT).show();
+    }
+
+    private void showLayersDialog() {
+        String[] names = layerNames.toArray(new String[0]);
+        new AlertDialog.Builder(this)
+                .setTitle("Camadas")
+                .setSingleChoiceItems(names, activeLayer, (dialog, which) -> {
+                    activeLayer = which;
+                    canvasView.setActiveLayer(which);
+                    dialog.dismiss();
+                })
+                .setPositiveButton("Fechar", null)
+                .show();
+    }
+
+    private void saveDrawing() {
+        Bitmap bitmap = canvasView.exportBitmap();
+        ContentValues values = new ContentValues();
+        values.put(MediaStore.Images.Media.DISPLAY_NAME,
+                "PaintAula-" + System.currentTimeMillis() + ".png");
+        values.put(MediaStore.Images.Media.MIME_TYPE, "image/png");
+        values.put(MediaStore.Images.Media.RELATIVE_PATH,
+                Environment.DIRECTORY_PICTURES + "/PaintAula");
+        Uri imageUri = getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+        if (imageUri == null) {
+            Toast.makeText(this, "Não foi possível salvar o desenho", Toast.LENGTH_LONG).show();
+            bitmap.recycle();
+            return;
+        }
+
+        try (OutputStream output = getContentResolver().openOutputStream(imageUri)) {
+            if (output == null) throw new IllegalStateException("Stream de saída indisponível");
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, output);
+            Toast.makeText(this, "Desenho salvo em Imagens/PaintAula", Toast.LENGTH_SHORT).show();
+        } catch (Exception error) {
+            getContentResolver().delete(imageUri, null, null);
+            Toast.makeText(this, "Erro ao salvar o desenho", Toast.LENGTH_LONG).show();
+        } finally {
+            bitmap.recycle();
+        }
     }
 
     private int dp(int value) {

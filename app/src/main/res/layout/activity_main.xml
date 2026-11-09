@@ -12,12 +12,13 @@
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/toolbar"
         android:layout_width="0dp"
-        android:layout_height="56dp"
+        android:layout_height="48dp"
         android:background="#6200EE"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:title="SimplePaint"
+        app:title="PaintAula"
+        app:titleTextAppearance="@style/TextAppearance.Material3.TitleMedium"
         app:titleTextColor="@android:color/white" />
 
     <View
@@ -29,175 +30,177 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <com.google.android.material.button.MaterialButtonToggleGroup
-        android:id="@+id/toolsGroup"
-        android:layout_width="0dp"
-        android:layout_height="64dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="6dp"
-        android:layout_marginEnd="6dp"
-        app:checkedButton="@id/toolFreehand"
-        app:selectionRequired="true"
-        app:singleSelection="true"
-        app:layout_constraintEnd_toStartOf="@id/currentColorButton"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/toolbar">
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/toolFreehand"
-            style="@style/Widget.Material3.Button.TextButton"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:contentDescription="Desenho livre"
-            android:insetTop="0dp"
-            android:insetBottom="0dp"
-            android:minWidth="0dp"
-            app:icon="@drawable/ic_tool_freehand"
-            app:iconSize="40dp"
-            app:iconTint="#263238"
-            app:cornerRadius="0dp" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/toolRectangle"
-            style="@style/Widget.Material3.Button.TextButton"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:contentDescription="Retângulo"
-            android:insetTop="0dp"
-            android:insetBottom="0dp"
-            android:minWidth="0dp"
-            app:icon="@drawable/ic_tool_rectangle"
-            app:iconSize="40dp"
-            app:iconTint="#263238"
-            app:cornerRadius="0dp" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/toolCircle"
-            style="@style/Widget.Material3.Button.TextButton"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:contentDescription="Círculo"
-            android:insetTop="0dp"
-            android:insetBottom="0dp"
-            android:minWidth="0dp"
-            app:icon="@drawable/ic_tool_circle"
-            app:iconSize="40dp"
-            app:iconTint="#263238"
-            app:cornerRadius="0dp" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/toolLine"
-            style="@style/Widget.Material3.Button.TextButton"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:contentDescription="Linha reta"
-            android:insetTop="0dp"
-            android:insetBottom="0dp"
-            android:minWidth="0dp"
-            app:icon="@drawable/ic_tool_line"
-            app:iconSize="40dp"
-            app:iconTint="#263238"
-            app:cornerRadius="0dp" />
-    </com.google.android.material.button.MaterialButtonToggleGroup>
-
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/currentColorButton"
-        style="@style/Widget.Material3.Button.OutlinedButton"
-        android:layout_width="58dp"
-        android:layout_height="58dp"
-        android:layout_marginEnd="10dp"
-        android:contentDescription="Escolher cor do traço"
-        android:insetTop="0dp"
-        android:insetBottom="0dp"
-        android:minWidth="0dp"
-        android:minHeight="0dp"
-        android:text=""
-        app:cornerRadius="0dp"
-        app:layout_constraintBottom_toBottomOf="@id/toolsGroup"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@id/toolsGroup"
-        app:strokeColor="#455A64"
-        app:strokeWidth="1dp" />
-
     <TextView
-        android:id="@+id/layerLabel"
+        android:id="@+id/drawingLabel"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:text="Camada"
-        android:textColor="#424242"
+        android:layout_height="24dp"
+        android:layout_marginStart="40dp"
+        android:layout_marginTop="2dp"
+        android:gravity="center_vertical"
+        android:text="Meu desenho"
+        android:textColor="#444444"
         android:textSize="14sp"
-        app:layout_constraintBottom_toBottomOf="@id/layerSpinner"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@id/layerSpinner" />
+        app:layout_constraintTop_toBottomOf="@id/toolbar" />
 
-    <Spinner
-        android:id="@+id/layerSpinner"
+    <LinearLayout
+        android:id="@+id/toolRow"
         android:layout_width="0dp"
-        android:layout_height="44dp"
-        android:layout_marginStart="6dp"
-        android:layout_marginTop="4dp"
-        android:backgroundTint="#555B66"
-        android:contentDescription="Selecionar camada de desenho"
-        app:layout_constraintEnd_toStartOf="@id/addLayerButton"
-        app:layout_constraintStart_toEndOf="@id/layerLabel"
-        app:layout_constraintTop_toBottomOf="@id/toolsGroup" />
-
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/addLayerButton"
-        style="@style/Widget.Material3.Button.TextButton"
-        android:layout_width="48dp"
-        android:layout_height="44dp"
-        android:layout_marginEnd="4dp"
-        android:contentDescription="Adicionar camada"
-        android:minWidth="0dp"
-        android:text="+"
-        android:textSize="24sp"
-        app:layout_constraintBottom_toBottomOf="@id/layerSpinner"
-        app:layout_constraintEnd_toStartOf="@id/clearButton"
-        app:layout_constraintTop_toTopOf="@id/layerSpinner" />
-
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/clearButton"
-        style="@style/Widget.Material3.Button.TextButton"
-        android:layout_width="wrap_content"
-        android:layout_height="44dp"
-        android:layout_marginEnd="8dp"
-        android:contentDescription="Limpar camada atual"
-        android:minWidth="0dp"
-        android:text="Limpar"
-        android:textSize="12sp"
-        app:layout_constraintBottom_toBottomOf="@id/layerSpinner"
+        android:layout_height="40dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingStart="2dp"
+        android:paddingEnd="2dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@id/layerSpinner" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/drawingLabel">
 
-    <com.google.android.material.card.MaterialCardView
-        android:id="@+id/canvasCard"
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/currentColorButton"
+            style="@style/Widget.Material3.Button.OutlinedButton"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:contentDescription="Escolher cor do traço"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            android:minWidth="0dp"
+            android:minHeight="0dp"
+            android:text=""
+            app:cornerRadius="0dp"
+            app:strokeColor="#B0B0B0"
+            app:strokeWidth="1dp" />
+
+        <com.google.android.material.button.MaterialButtonToggleGroup
+            android:id="@+id/toolsGroup"
+            android:layout_width="136dp"
+            android:layout_height="38dp"
+            android:layout_marginStart="2dp"
+            app:checkedButton="@id/toolFreehand"
+            app:selectionRequired="true"
+            app:singleSelection="true">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/toolFreehand"
+                style="@style/Widget.Material3.Button.TextButton"
+                android:layout_width="34dp"
+                android:layout_height="match_parent"
+                android:contentDescription="Desenho livre"
+                android:insetTop="0dp"
+                android:insetBottom="0dp"
+                android:minWidth="0dp"
+                android:padding="0dp"
+                app:icon="@drawable/ic_tool_freehand"
+                app:iconSize="20dp"
+                app:iconTint="#7A7A7A"
+                app:cornerRadius="0dp" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/toolRectangle"
+                style="@style/Widget.Material3.Button.TextButton"
+                android:layout_width="34dp"
+                android:layout_height="match_parent"
+                android:contentDescription="Retângulo"
+                android:insetTop="0dp"
+                android:insetBottom="0dp"
+                android:minWidth="0dp"
+                android:padding="0dp"
+                app:icon="@drawable/ic_tool_rectangle"
+                app:iconSize="20dp"
+                app:iconTint="#7A7A7A"
+                app:cornerRadius="0dp" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/toolCircle"
+                style="@style/Widget.Material3.Button.TextButton"
+                android:layout_width="34dp"
+                android:layout_height="match_parent"
+                android:contentDescription="Círculo"
+                android:insetTop="0dp"
+                android:insetBottom="0dp"
+                android:minWidth="0dp"
+                android:padding="0dp"
+                app:icon="@drawable/ic_tool_circle"
+                app:iconSize="20dp"
+                app:iconTint="#7A7A7A"
+                app:cornerRadius="0dp" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/toolLine"
+                style="@style/Widget.Material3.Button.TextButton"
+                android:layout_width="34dp"
+                android:layout_height="match_parent"
+                android:contentDescription="Linha reta"
+                android:insetTop="0dp"
+                android:insetBottom="0dp"
+                android:minWidth="0dp"
+                android:padding="0dp"
+                app:icon="@drawable/ic_tool_line"
+                app:iconSize="20dp"
+                app:iconTint="#7A7A7A"
+                app:cornerRadius="0dp" />
+        </com.google.android.material.button.MaterialButtonToggleGroup>
+
+        <SeekBar
+            android:id="@+id/strokeWidthSlider"
+            android:layout_width="0dp"
+            android:layout_height="32dp"
+            android:layout_weight="1"
+            android:contentDescription="Espessura do traço"
+            android:max="39"
+            android:progress="7" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/saveButton"
+            style="@style/Widget.Material3.Button.TextButton"
+            android:layout_width="32dp"
+            android:layout_height="36dp"
+            android:contentDescription="Salvar desenho"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            android:minWidth="0dp"
+            app:icon="@drawable/ic_action_save"
+            app:iconSize="22dp"
+            app:iconTint="#7A7A7A"
+            app:cornerRadius="0dp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/layersButton"
+            style="@style/Widget.Material3.Button.TextButton"
+            android:layout_width="32dp"
+            android:layout_height="36dp"
+            android:contentDescription="Selecionar camada"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            android:minWidth="0dp"
+            app:icon="@drawable/ic_layers"
+            app:iconSize="22dp"
+            app:iconTint="#7A7A7A"
+            app:cornerRadius="0dp" />
+    </LinearLayout>
+
+    <com.ifsc.app.PaintCanvasView
+        android:id="@+id/paintCanvas"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginStart="12dp"
-        android:layout_marginTop="4dp"
-        android:layout_marginEnd="12dp"
-        android:layout_marginBottom="12dp"
-        app:cardBackgroundColor="@android:color/white"
-        app:cardCornerRadius="2dp"
-        app:cardElevation="0dp"
-        app:strokeColor="#D7D7D7"
-        app:strokeWidth="1dp"
+        android:contentDescription="Área de desenho"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/layerSpinner">
+        app:layout_constraintTop_toBottomOf="@id/toolRow" />
 
-        <com.ifsc.app.PaintCanvasView
-            android:id="@+id/paintCanvas"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:contentDescription="Área de desenho" />
-    </com.google.android.material.card.MaterialCardView>
+    <ImageButton
+        android:id="@+id/addLayerButton"
+        android:layout_width="42dp"
+        android:layout_height="44dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:background="@drawable/bg_add_layer"
+        android:contentDescription="Adicionar camada"
+        android:padding="0dp"
+        android:scaleType="center"
+        android:src="@drawable/ic_add"
+        android:tint="#666666"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
