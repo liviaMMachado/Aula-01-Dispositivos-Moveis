@@ -8,6 +8,7 @@ import android.graphics.Path;
 import android.graphics.RectF;
 import android.view.MotionEvent;
 import android.view.View;
+import android.util.AttributeSet;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +28,20 @@ public class PaintCanvasView extends View {
 
     public PaintCanvasView(Context context) {
         super(context);
+        initialize();
+    }
+
+    public PaintCanvasView(Context context, AttributeSet attrs) {
+        super(context, attrs);
+        initialize();
+    }
+
+    public PaintCanvasView(Context context, AttributeSet attrs, int defStyleAttr) {
+        super(context, attrs, defStyleAttr);
+        initialize();
+    }
+
+    private void initialize() {
         setLayerType(View.LAYER_TYPE_SOFTWARE, null);
         layers.add(new ArrayList<>());
         paint.setStyle(Paint.Style.STROKE);
