@@ -1,0 +1,281 @@
+Index: app/src/main/java/com/ifsc/app/MainActivity.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.ifsc.app;\r\n\r\nimport android.content.Intent;\r\nimport android.os.Bundle;\r\nimport android.util.Log;\r\nimport android.widget.Button;\r\nimport android.widget.EditText;\r\nimport android.widget.Toast;\r\n\r\nimport androidx.activity.EdgeToEdge;\r\nimport androidx.appcompat.app.AppCompatActivity;\r\nimport androidx.core.graphics.Insets;\r\nimport androidx.core.view.ViewCompat;\r\nimport androidx.core.view.WindowInsetsCompat;\r\n\r\npublic class MainActivity extends AppCompatActivity {\r\n\r\n    @Override\r\n    protected void onCreate(Bundle savedInstanceState) {\r\n        super.onCreate(savedInstanceState);\r\n        EdgeToEdge.enable(this);\r\n        setContentView(R.layout.activity_main);\r\n        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {\r\n            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());\r\n            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);\r\n            return insets;\r\n        });\r\n        Toast.makeText(this, \"OnCreate\", Toast.LENGTH_LONG).show();\r\n        Log.d(\"ciclodavida\", \"onCreate\");\r\n\r\n        Button b = findViewById(R.id.button);\r\n        b.setOnClickListener(v -> {\r\n            Intent i = new Intent(this, ActivityB.class);\r\n            startActivity(i);\r\n        });\r\n        Button b2 = findViewById(R.id.button2);\r\n        b2.setOnClickListener(v -> {\r\n            EditText editText=findViewById(R.id.edText);\r\n            String s = editText.getText().toString();\r\n\r\n            Intent i = new Intent(this, MainActivity2.class);\r\n            i.putExtra(\"msn\", s);\r\n            startActivity(i);\r\n        });\r\n    }\r\n    @Override\r\n        protected void onStart () {\r\n            super.onStart();\r\n            Toast.makeText(this, \"onStart\", Toast.LENGTH_LONG).show();\r\n        Log.d(\"ciclodavida\", \"onStart\");\r\n    }\r\n    @Override\r\n    protected void onResume () {\r\n        super.onResume();\r\n        Toast.makeText(this, \"onResume\", Toast.LENGTH_LONG).show();\r\n        Log.d(\"ciclodavida\", \"onResume\");\r\n    }\r\n    @Override\r\n    protected void onPause () {\r\n        super.onPause();\r\n        Toast.makeText(this, \"onPause\", Toast.LENGTH_LONG).show();\r\n        Log.d(\"ciclodavida\", \"onPause\");\r\n    }\r\n    @Override\r\n    protected void onStop () {\r\n        super.onStop();\r\n        Toast.makeText(this, \"onStop\", Toast.LENGTH_LONG).show();\r\n        Log.d(\"ciclodavida\", \"onStop\");\r\n    }\r\n    @Override\r\n    protected void onDestroy () {\r\n        super.onDestroy();\r\n        Toast.makeText(this, \"onDestroy\", Toast.LENGTH_LONG).show();\r\n        Log.d(\"ciclodavida\", \"onDestroy\");\r\n    }\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/ifsc/app/MainActivity.java b/app/src/main/java/com/ifsc/app/MainActivity.java
+--- a/app/src/main/java/com/ifsc/app/MainActivity.java	(revision efa699ae5eaddade62ec7cae27c37bc8f1e02414)
++++ b/app/src/main/java/com/ifsc/app/MainActivity.java	(date 1794333119941)
+@@ -1,11 +1,18 @@
++
+ package com.ifsc.app;
+ 
+-import android.content.Intent;
++import android.content.ContentValues;
++import android.content.Context;
++import android.content.DialogInterface;
++import android.database.Cursor;
++import android.database.sqlite.SQLiteDatabase;
++import android.hardware.Sensor;
++import android.hardware.SensorEvent;
++import android.hardware.SensorEventListener;
++import android.hardware.SensorManager;
+ import android.os.Bundle;
+ import android.util.Log;
+-import android.widget.Button;
+-import android.widget.EditText;
+-import android.widget.Toast;
++import android.widget.TextView;
+ 
+ import androidx.activity.EdgeToEdge;
+ import androidx.appcompat.app.AppCompatActivity;
+@@ -13,64 +20,65 @@
+ import androidx.core.view.ViewCompat;
+ import androidx.core.view.WindowInsetsCompat;
+ 
+-public class MainActivity extends AppCompatActivity {
++import java.lang.reflect.Array;
++import java.util.ArrayList;
++
++public class MainActivity extends AppCompatActivity implements SensorEventListener {
++
++    TextView tv;
++
++    SQLiteDatabase database;
+ 
+     @Override
+     protected void onCreate(Bundle savedInstanceState) {
+         super.onCreate(savedInstanceState);
+         EdgeToEdge.enable(this);
+         setContentView(R.layout.activity_main);
+-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
++        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.edText), (v, insets) -> {
+             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
+             return insets;
+         });
+-        Toast.makeText(this, "OnCreate", Toast.LENGTH_LONG).show();
+-        Log.d("ciclodavida", "onCreate");
++        SensorManager sm = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
++        Sensor ac = sm.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
++
++        sm.registerListener(this,ac,SensorManager.SENSOR_DELAY_NORMAL);
++        tv = findViewById(R.id.textView);
++        database = openOrCreateDatabase("bd",MODE_PRIVATE, null);
++        database.execSQL("CREATE TABLE IF NOT EXISTS eventos (id INTEGER PRIMARY KEY AUTOINCREMENT, " +
++                "value1 REAL(5,2)," +
++                "value2 REAL(5,2)," +
++                "value3 REAL(5,2))");
++    }
+ 
+-        Button b = findViewById(R.id.button);
+-        b.setOnClickListener(v -> {
+-            Intent i = new Intent(this, ActivityB.class);
+-            startActivity(i);
+-        });
+-        Button b2 = findViewById(R.id.button2);
+-        b2.setOnClickListener(v -> {
+-            EditText editText=findViewById(R.id.edText);
+-            String s = editText.getText().toString();
++    public ArrayList<Eventos> getAllEvents(){
++        Cursor cursor = database.rawQuery("SELECT * FROM eventos LIMIT ? ", new String[]{"1000"});
++        cursor.moveToFirst();
+ 
+-            Intent i = new Intent(this, MainActivity2.class);
+-            i.putExtra("msn", s);
+-            startActivity(i);
+-        });
+-    }
+-    @Override
+-        protected void onStart () {
+-            super.onStart();
+-            Toast.makeText(this, "onStart", Toast.LENGTH_LONG).show();
+-        Log.d("ciclodavida", "onStart");
++        ArrayList<Eventos> result = new ArrayList<>();
++        while(!cursor.isAfterLast()) {
++            new Eventos(cursor.getInt(0), new Float[]{cursor.getFloat(1),cursor.getFloat(2),cursor.getFloat(3)});
++        }
++        return result;
+     }
++
+     @Override
+-    protected void onResume () {
+-        super.onResume();
+-        Toast.makeText(this, "onResume", Toast.LENGTH_LONG).show();
+-        Log.d("ciclodavida", "onResume");
++    public void onAccuracyChanged(Sensor sensor, int accuracy){
+     }
++
+     @Override
+-    protected void onPause () {
+-        super.onPause();
+-        Toast.makeText(this, "onPause", Toast.LENGTH_LONG).show();
+-        Log.d("ciclodavida", "onPause");
+-    }
+-    @Override
+-    protected void onStop () {
+-        super.onStop();
+-        Toast.makeText(this, "onStop", Toast.LENGTH_LONG).show();
+-        Log.d("ciclodavida", "onStop");
+-    }
+-    @Override
+-    protected void onDestroy () {
+-        super.onDestroy();
+-        Toast.makeText(this, "onDestroy", Toast.LENGTH_LONG).show();
+-        Log.d("ciclodavida", "onDestroy");
++    public void onSensorChanged (SensorEvent event){
++        tv.setText(Float.toString(event.values[0])+":"+
++                Float.toString(event.values[1])+":"+
++                Float.toString(event.values[2]));
++
++        ContentValues contentValues = new ContentValues();
++        contentValues.put("value1",event.values[0]);
++        contentValues.put("value2",event.values[1]);
++        contentValues.put("value3",event.values[2]);
++        Log.v("eventos", "Inserido"+event);
++
++        database.insert("eventos",null, contentValues);
++
+     }
+ }
+\ No newline at end of file
+Index: app/src/main/res/layout/activity_main2.xml
+===================================================================
+diff --git a/app/src/main/res/layout/activity_main2.xml b/app/src/main/res/layout/activity_main2.xml
+deleted file mode 100644
+--- a/app/src/main/res/layout/activity_main2.xml	(revision efa699ae5eaddade62ec7cae27c37bc8f1e02414)
++++ /dev/null	(revision efa699ae5eaddade62ec7cae27c37bc8f1e02414)
+@@ -1,17 +0,0 @@
+-<?xml version="1.0" encoding="utf-8"?>
+-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+-    xmlns:app="http://schemas.android.com/apk/res-auto"
+-    xmlns:tools="http://schemas.android.com/tools"
+-    android:layout_width="match_parent"
+-    android:layout_height="match_parent">
+-
+-    <TextView
+-        android:id="@+id/tvTexto"
+-        android:layout_width="wrap_content"
+-        android:layout_height="wrap_content"
+-        android:text="TextView"
+-        app:layout_constraintBottom_toBottomOf="parent"
+-        app:layout_constraintEnd_toEndOf="parent"
+-        app:layout_constraintStart_toStartOf="parent"
+-        app:layout_constraintTop_toTopOf="parent" />
+-</androidx.constraintlayout.widget.ConstraintLayout>
+\ No newline at end of file
+Index: app/src/main/java/com/ifsc/app/MainActivity2.java
+===================================================================
+diff --git a/app/src/main/java/com/ifsc/app/MainActivity2.java b/app/src/main/java/com/ifsc/app/MainActivity2.java
+deleted file mode 100644
+--- a/app/src/main/java/com/ifsc/app/MainActivity2.java	(revision efa699ae5eaddade62ec7cae27c37bc8f1e02414)
++++ /dev/null	(revision efa699ae5eaddade62ec7cae27c37bc8f1e02414)
+@@ -1,34 +0,0 @@
+-package com.ifsc.app;
+-
+-import android.content.Intent;
+-import android.os.Bundle;
+-import android.util.Log;
+-import android.widget.Button;
+-import android.widget.EditText;
+-import android.widget.TextView;
+-import android.widget.Toast;
+-
+-import androidx.activity.EdgeToEdge;
+-import androidx.appcompat.app.AppCompatActivity;
+-import androidx.core.graphics.Insets;
+-import androidx.core.view.ViewCompat;
+-import androidx.core.view.WindowInsetsCompat;
+-
+-public class MainActivity2 extends AppCompatActivity {
+-
+-    @Override
+-    protected void onCreate(Bundle savedInstanceState) {
+-        super.onCreate(savedInstanceState);
+-        EdgeToEdge.enable(this);
+-        setContentView(R.layout.activity_main);
+-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
+-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
+-            return insets;
+-        });
+-
+-        TextView tv=findViewById(R.id.textView);
+-        Intent i = getIntent();
+-        tv.setText(i.getExtras().getString("msn"));
+-    }
+-}
+\ No newline at end of file
+Index: app/src/main/java/com/ifsc/app/ActivityB.java
+===================================================================
+diff --git a/app/src/main/java/com/ifsc/app/ActivityB.java b/app/src/main/java/com/ifsc/app/ActivityB.java
+deleted file mode 100644
+--- a/app/src/main/java/com/ifsc/app/ActivityB.java	(revision efa699ae5eaddade62ec7cae27c37bc8f1e02414)
++++ /dev/null	(revision efa699ae5eaddade62ec7cae27c37bc8f1e02414)
+@@ -1,15 +0,0 @@
+-package com.ifsc.app;
+-
+-import android.os.Bundle;
+-import android.os.PersistableBundle;
+-
+-import androidx.annotation.Nullable;
+-import androidx.appcompat.app.AppCompatActivity;
+-
+-public class ActivityB extends AppCompatActivity {
+-    @Override
+-    public void onCreate(@Nullable Bundle savedInstanceState) {
+-        super.onCreate(savedInstanceState);
+-        setContentView(R.layout.activity_b);
+-    }
+-}
+Index: app/src/main/res/layout/activity_b.xml
+===================================================================
+diff --git a/app/src/main/res/layout/activity_b.xml b/app/src/main/res/layout/activity_b.xml
+deleted file mode 100644
+--- a/app/src/main/res/layout/activity_b.xml	(revision efa699ae5eaddade62ec7cae27c37bc8f1e02414)
++++ /dev/null	(revision efa699ae5eaddade62ec7cae27c37bc8f1e02414)
+@@ -1,19 +0,0 @@
+-<?xml version="1.0" encoding="utf-8"?>
+-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+-    xmlns:app="http://schemas.android.com/apk/res-auto"
+-    xmlns:tools="http://schemas.android.com/tools"
+-    android:layout_width="match_parent"
+-    android:layout_height="match_parent">
+-
+-    <ImageView
+-        android:id="@+id/imageView2"
+-        android:layout_width="wrap_content"
+-        android:layout_height="wrap_content"
+-        app:layout_constraintBottom_toBottomOf="parent"
+-        app:layout_constraintEnd_toEndOf="parent"
+-        app:layout_constraintStart_toStartOf="parent"
+-        app:layout_constraintTop_toTopOf="parent"
+-        app:srcCompat="@drawable/imagem1"
+-        tools:srcCompat="@drawable/imagem1" />
+-
+-</androidx.constraintlayout.widget.ConstraintLayout>
+\ No newline at end of file
+Index: app/src/main/java/com/ifsc/app/Eventos.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/ifsc/app/Eventos.java b/app/src/main/java/com/ifsc/app/Eventos.java
+new file mode 100644
+--- /dev/null	(date 1794333139417)
++++ b/app/src/main/java/com/ifsc/app/Eventos.java	(date 1794333139417)
+@@ -0,0 +1,11 @@
++package com.ifsc.app;
++
++public class Eventos {
++    Integer id;
++    Float values[] = new Float[3];
++
++    public Eventos(Integer id, Float[] values) {
++        this.id = id;
++        this.values = values;
++    }
++}
+\ No newline at end of file

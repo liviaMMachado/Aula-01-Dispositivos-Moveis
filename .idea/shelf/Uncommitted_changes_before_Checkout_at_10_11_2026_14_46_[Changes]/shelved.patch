@@ -1,0 +1,24 @@
+Index: arquivo.txt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>Hello!\r\n
+===================================================================
+diff --git a/arquivo.txt b/arquivo.txt
+--- a/arquivo.txt	(revision efa699ae5eaddade62ec7cae27c37bc8f1e02414)
++++ b/arquivo.txt	(date 1794332461895)
+@@ -1,1 +1,0 @@
+-Hello!
+Index: frutas.txt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>melão\r\nkiwi\r\nmanga\r\nfigo
+===================================================================
+diff --git a/frutas.txt b/frutas.txt
+--- a/frutas.txt	(revision efa699ae5eaddade62ec7cae27c37bc8f1e02414)
++++ b/frutas.txt	(date 1794332461910)
+@@ -1,4 +1,0 @@
+-melão
+-kiwi
+-manga
+-figo
+\ No newline at end of file

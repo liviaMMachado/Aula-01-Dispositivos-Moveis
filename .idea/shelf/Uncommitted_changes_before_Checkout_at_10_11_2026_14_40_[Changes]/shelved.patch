@@ -1,0 +1,89 @@
+Index: .idea/.gitignore
+===================================================================
+diff --git a/.idea/.gitignore b/.idea/.gitignore
+deleted file mode 100644
+--- a/.idea/.gitignore	(revision ac1759352fbd0ddae7ded4ca5920cd5d7702c056)
++++ /dev/null	(revision ac1759352fbd0ddae7ded4ca5920cd5d7702c056)
+@@ -1,3 +0,0 @@
+-# Default ignored files
+-/shelf/
+-/workspace.xml
+Index: .idea/deviceManager.xml
+===================================================================
+diff --git a/.idea/deviceManager.xml b/.idea/deviceManager.xml
+deleted file mode 100644
+--- a/.idea/deviceManager.xml	(revision ac1759352fbd0ddae7ded4ca5920cd5d7702c056)
++++ /dev/null	(revision ac1759352fbd0ddae7ded4ca5920cd5d7702c056)
+@@ -1,13 +0,0 @@
+-<?xml version="1.0" encoding="UTF-8"?>
+-<project version="4">
+-  <component name="DeviceTable">
+-    <option name="columnSorters">
+-      <list>
+-        <ColumnSorterState>
+-          <option name="column" value="Name" />
+-          <option name="order" value="ASCENDING" />
+-        </ColumnSorterState>
+-      </list>
+-    </option>
+-  </component>
+-</project>
+\ No newline at end of file
+Index: app/src/main/java/com/ifsc/app/Eventos.java
+===================================================================
+diff --git a/app/src/main/java/com/ifsc/app/Eventos.java b/app/src/main/java/com/ifsc/app/Eventos.java
+deleted file mode 100644
+--- a/app/src/main/java/com/ifsc/app/Eventos.java	(revision ac1759352fbd0ddae7ded4ca5920cd5d7702c056)
++++ /dev/null	(revision ac1759352fbd0ddae7ded4ca5920cd5d7702c056)
+@@ -1,11 +0,0 @@
+-package com.ifsc.app;
+-
+-public class Eventos {
+-    Integer id;
+-    Float values[] = new Float[3];
+-
+-    public Eventos(Integer id, Float[] values) {
+-        this.id = id;
+-        this.values = values;
+-    }
+-}
+Index: app/build.gradle.kts
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>plugins {\r\n    alias(libs.plugins.android.application)\r\n}\r\n\r\nandroid {\r\n    namespace = \"com.ifsc.app\"\r\n    compileSdk {\r\n        version = release(36) {\r\n            minorApiLevel = 1\r\n        }\r\n    }\r\n\r\n    defaultConfig {\r\n        applicationId = \"com.ifsc.app\"\r\n        minSdk = 30\r\n        targetSdk = 36\r\n        versionCode = 1\r\n        versionName = \"1.0\"\r\n\r\n        testInstrumentationRunner = \"androidx.test.runner.AndroidJUnitRunner\"\r\n    }\r\n\r\n    buildTypes {\r\n        release {\r\n            optimization {\r\n                enable = false\r\n            }\r\n        }\r\n    }\r\n    compileOptions {\r\n        sourceCompatibility = JavaVersion.VERSION_11\r\n        targetCompatibility = JavaVersion.VERSION_11\r\n    }\r\n}\r\n\r\ndependencies {\r\n    implementation(libs.activity.ktx)\r\n    implementation(libs.appcompat)\r\n    implementation(libs.constraintlayout)\r\n    implementation(libs.material)\r\n    implementation(\"com.github.skydoves:colorpickerview:2.5.0\")\r\n    testImplementation(libs.junit)\r\n    androidTestImplementation(libs.espresso.core)\r\n    androidTestImplementation(libs.ext.junit)\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/build.gradle.kts b/app/build.gradle.kts
+--- a/app/build.gradle.kts	(revision ac1759352fbd0ddae7ded4ca5920cd5d7702c056)
++++ b/app/build.gradle.kts	(date 1794332033552)
+@@ -38,7 +38,6 @@
+     implementation(libs.appcompat)
+     implementation(libs.constraintlayout)
+     implementation(libs.material)
+-    implementation("com.github.skydoves:colorpickerview:2.5.0")
+     testImplementation(libs.junit)
+     androidTestImplementation(libs.espresso.core)
+     androidTestImplementation(libs.ext.junit)
+Index: .idea/misc.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<project version=\"4\">\r\n  <component name=\"ExternalStorageConfigurationManager\" enabled=\"true\" />\r\n  <component name=\"ProjectRootManager\" version=\"2\" languageLevel=\"JDK_21\" default=\"true\" project-jdk-name=\"jbr-21\" project-jdk-type=\"JavaSDK\" />\r\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/misc.xml b/.idea/misc.xml
+--- a/.idea/misc.xml	(revision ac1759352fbd0ddae7ded4ca5920cd5d7702c056)
++++ b/.idea/misc.xml	(date 1794332194945)
+@@ -1,5 +1,5 @@
+ <?xml version="1.0" encoding="UTF-8"?>
+ <project version="4">
+   <component name="ExternalStorageConfigurationManager" enabled="true" />
+-  <component name="ProjectRootManager" version="2" languageLevel="JDK_21" default="true" project-jdk-name="jbr-21" project-jdk-type="JavaSDK" />
++  <component name="ProjectRootManager" version="2" languageLevel="JDK_21" project-jdk-name="temurin-21" project-jdk-type="JavaSDK" />
+ </project>
+\ No newline at end of file
+diff --git a/arquivo.txt b/arquivo.txt
+new file mode 100644
+diff --git a/frutas.txt b/frutas.txt
+new file mode 100644
